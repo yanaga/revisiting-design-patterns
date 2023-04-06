@@ -19,10 +19,10 @@ interface Specification {
         return new AndSpecification(this, other);
     }
     default Specification or(Specification other) {
-        return new AndSpecification(this, other);
+        return new OrSpecification(this, other);
     }
     default Specification not(Specification other) {
-        return new AndSpecification(this, other);
+        return new NotSpecification(other);
     }
 
 }

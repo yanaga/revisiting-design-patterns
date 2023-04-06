@@ -11,11 +11,18 @@ public class RevisitedChainOfResponsibility {
     public static void main(String[] args) {
         var userProfile = new UserProfile(false, true, false);
         Stream.of(
-                        new GoogleWalletPassUpdateNotifier()
+                        new GoogleWalletPassUpdateNotifier(),
+                        new SmsNotifier(),
+                        new EmailNotifier()
                 )
                 .filter(n -> n.test(userProfile))
                 .findFirst()
                 .ifPresent(n -> n.accept(userProfile));
+
+        Stream.of(new UserNotifier(UserProfile::allowsSms, u -> System.out.println("")))
+                .filter(u -> u.predicate().test(userProfile))
+                .findFirst()
+                .ifPresent(u -> u.consumer().accept(userProfile));
     }
 
 }
@@ -36,16 +43,26 @@ class GoogleWalletPassUpdateNotifier implements Consumer<UserProfile>, Predicate
     }
 }
 
-class EmailNotifier implements Consumer<UserProfile> {
+class EmailNotifier implements Consumer<UserProfile>, Predicate<UserProfile> {
     @Override
     public void accept(UserProfile profile) {
         System.out.println("Email sent.");
     }
+
+    @Override
+    public boolean test(UserProfile profile) {
+        return profile.allowsEmail();
+    }
 }
 
-class SmsNotifier implements Consumer<UserProfile> {
+class SmsNotifier implements Consumer<UserProfile>, Predicate<UserProfile> {
     @Override
     public void accept(UserProfile profile) {
         System.out.println("SMS sent.");
+    }
+
+    @Override
+    public boolean test(UserProfile userProfile) {
+        return userProfile.allowsSms();
     }
 }

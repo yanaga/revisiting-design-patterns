@@ -30,6 +30,7 @@ interface UserNotifier {
 }
 
 abstract class AbstractUserNotifier implements UserNotifier {
+
     protected UserNotifier nextNotifier;
 
     @Override

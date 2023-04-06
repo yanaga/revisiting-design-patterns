@@ -16,7 +16,9 @@ public class RevisitedStrategy {
 
     public static GoogleWalletEndpoint getEndpoint() {
         var endpoint = new GoogleWalletEndpoint();
-        endpoint.setStrategy(new CompleteJwtAddToGoogleWalletStrategy());
+        endpoint.setStrategy(pass -> "abc");
+        endpoint.setStrategy(new AddToGoogleWalletLink()::complete);
+        endpoint.setStrategy(new AddToGoogleWalletLink()::preCreated);
         return endpoint;
     }
 
@@ -24,34 +26,24 @@ public class RevisitedStrategy {
 
 class GoogleWalletEndpoint {
 
-    private AddToGoogleWalletStrategy strategy;
+    private Function<PassInformation, String> strategy;
 
     public String get(PassInformation passInformation) {
         return strategy.apply(passInformation);
     }
 
-    public void setStrategy(AddToGoogleWalletStrategy strategy) {
+    public void setStrategy(Function<PassInformation, String> strategy) {
         this.strategy = strategy;
     }
 }
 
-interface AddToGoogleWalletStrategy extends Function<PassInformation, String> {
+class AddToGoogleWalletLink {
 
-}
-
-class CompleteJwtAddToGoogleWalletStrategy implements AddToGoogleWalletStrategy {
-
-    @Override
-    public String apply(PassInformation information) {
+    public String complete(PassInformation information) {
         return "JWT with complete information.";
     }
-}
 
-class PreCreatedJwtAddToGoogleWalletStrategy implements AddToGoogleWalletStrategy {
-
-    @Override
-    public String apply(PassInformation information) {
+    public String preCreated(PassInformation information) {
         return "JWT with just the IDs of the objects.";
     }
-
 }

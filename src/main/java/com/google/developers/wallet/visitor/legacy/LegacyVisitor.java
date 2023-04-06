@@ -3,7 +3,18 @@ package com.google.developers.wallet.visitor.legacy;
 public class LegacyVisitor {
 
     public static void main(String[] args) {
+        GoogleWalletPass card = new LoyaltyCard();
+        card.accept(new Visitor<Object>() {
+            @Override
+            public Object visit(LoyaltyCard loyaltyCard) {
+                return null;
+            }
 
+            @Override
+            public Object visit(EventTicket eventTicket) {
+                return null;
+            }
+        });
     }
 
 }

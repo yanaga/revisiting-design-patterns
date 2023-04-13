@@ -19,7 +19,7 @@ public class RevisitedChainOfResponsibility {
                 .findFirst()
                 .ifPresent(n -> n.accept(userProfile));
 
-        Stream.of(new UserNotifier(UserProfile::allowsSms, u -> System.out.println("")))
+        Stream.of(new UserNotifier(UserProfile::allowsSms, u -> System.out.println("SMS sent")))
                 .filter(u -> u.predicate().test(userProfile))
                 .findFirst()
                 .ifPresent(u -> u.consumer().accept(userProfile));

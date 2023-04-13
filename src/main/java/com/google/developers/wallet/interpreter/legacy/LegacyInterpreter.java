@@ -15,11 +15,14 @@ public class LegacyInterpreter {
     public static int evaluate(String expression) {
         Stack<Integer> stack = new Stack<>();
         for (String s : expression.split(" ")) {
-            Operation.fromString(s)
-                    .ifPresentOrElse(
-                            o -> stack.push(o.apply(stack.pop(), stack.pop())),
-                            () -> stack.push(Integer.parseInt(s))
-                    );
+            Operation operation = Operation.fromString(s);
+            if (operation != null) {
+                Integer right = stack.pop();
+                Integer left = stack.pop();
+                stack.push(operation.apply(left, right));
+            } else {
+                stack.push(Integer.parseInt(s));
+            }
         }
         return stack.pop();
     }
@@ -29,13 +32,13 @@ enum Operation {
     ADD("+") {
         @Override
         public int apply(int x, int y) {
-            return y + x;
+            return x + y;
         }
     },
     SUBTRACT("-") {
         @Override
         public int apply(int x, int y) {
-            return y - x;
+            return x - y;
         }
     };
 
@@ -48,8 +51,8 @@ enum Operation {
         this.stringValue = stringValue;
     }
 
-    public static Optional<Operation> fromString(String s) {
-        return Optional.ofNullable(valueMap.get(s));
+    public static Operation fromString(String s) {
+        return valueMap.get(s);
     }
 
     public abstract int apply(int x, int y);

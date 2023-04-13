@@ -35,6 +35,7 @@ class GoogleWalletEndpoint {
     public void setStrategy(Function<PassInformation, String> strategy) {
         this.strategy = strategy;
     }
+
 }
 
 class AddToGoogleWalletLink {

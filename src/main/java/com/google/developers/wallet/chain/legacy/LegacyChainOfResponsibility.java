@@ -25,6 +25,7 @@ public class LegacyChainOfResponsibility {
 interface UserNotifier {
 
     void notify(UserProfile profile);
+
     void setNextNotifier(UserNotifier notifier);
 
 }

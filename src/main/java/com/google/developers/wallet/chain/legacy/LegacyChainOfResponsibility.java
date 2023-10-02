@@ -69,7 +69,7 @@ class EmailNotifier extends AbstractUserNotifier {
 class SmsNotifier extends AbstractUserNotifier {
     @Override
     public void notify(UserProfile profile) {
-        if (profile.allowsEmail()) {
+        if (profile.allowsSms()) {
             System.out.println("SMS sent");
         } else if (nextNotifier != null) {
             nextNotifier.notify(profile);
